@@ -3,11 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Courses</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+  </style>
 </head>
 <body>
   <h2>Available Courses</h2>
   <div id="course-list"></div>
-  <script type="module" src="assets/js/courses.js"></script>
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const courseList = document.getElementById("course-list");
+      const querySnapshot = await getDocs(collection(db, "courses"));
+      querySnapshot.forEach((doc) => {
+        const course = doc.data();
+        const div = document.createElement("div");
+        div.innerHTML = `<h3>${course.title}</h3><p>${course.description}</p>`;
+        courseList.appendChild(div);
+      });
+    });
+  </script>
 </body>
 </html>
